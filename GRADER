@@ -1,0 +1,41 @@
+Project 3 GRADER
+Part1: WUgraph Algorithm
+Added Classes
+Edge
+is an object that represents an edge between two vertices. It contains a DListNode array of length 2 that holds the reference to each vertex, the weight of the edge, and the reference to its partner.
+
+Vertex
+is an object that represents a vertex in a graph. It is the inner representation of a vertex. It contains a DList that holds all the reference to its adjacency edges, the reference to the actual vertex object, and the degree of this vertex (which is updaded every time an edge connects this to another Vertex.
+
+Algorithm
+In order to run all the methods in their required runtime, we need to have different ways of referencing one object. Therefore, we have DList that contains all the vertices(which are all Vertex objects), a Hash table containing references to all the DListNodes that hold Vertex objects, and a hash table containing references to all the DListNodes that hold Edge objects inside WUgraph.java.
+To run vertexCount() and edgeCount() in O(1) time, we keep two integer variables that represent the number of vertices and edges in the graph;
+To run getVertices() in O(|V|) time, we keep a DList that contains all the Vertex objects as items. Therefore, we create an array of the length of the DList, and loop over the DList and get the actual vertex from each Vertex object.
+To run addVertex() in O(1) time, we first create an inner Vertex object that contains the actual vertex, and then we insert it back in our DList and also the hash table of vertices.
+To run removeVertex() in O(d) time, we first use our hash table to access the DListNode that contains the Vertex object in constant time. Then we loop over the adjacency edge list, delete each edge and use the partner reference inside the Edge object and delete the edge in other Vertex object. This will take O(d) time. “partner” is a reference to the DListNode that contains the Vertex object that this is connected to. 
+To run isVertex() in O(1) time, we use the hash table to check if we have that vertex.
+To run degree(Object) in O(1) time, we first use hash table to find the Vertex object in constant time, and then use the method degree() inside the Vertex object(which runs in constant time also) to return the degree. 
+
+To run getNeighbours() in O(d) time, we use the hash table to find the vertex, also use degree() to get the number of neighbors, use that to create Neighbors instances with proper size. Then loop over adjacencyedge DList which is an instance of Vertex object to get all Edges connected to the input vertex. By having Edge object we get access to the weight and the neighbor, so we just fill both neighborList, weightList.  
+
+To run addEdge(Object, Object, int) in O(1) time, we first create a VertexPair object and use its hash code to check if we already have the edge. (The dictionary edgeList uses VertexPairs as keys and Edge objects as values).  If we do, then we update the weight. If not, we create two same Edge objects that have partner reference to each other and insert each Edge object to each Vertex objects’ adjacency edge list. Then we add one of the DListNode that contains the Edge object into the hash table of the edge.
+To run removeEdge(Object, Object) in O(1) time, we first create a VertexPair object and use its hash code to find the DListNode that contains the Edge object. Then we use the partner reference to access the partner edge and remove both DListNode.
+To run isEdge(Object, Object) in O(1) time, we first create a VertexPair object and use its hash code to find whether the Edge exists or not.
+To run weight(Object, Object) in O(1) time, we first create a VertexPair object and use its hash code to find the Edge and call on weight() method to return the weight of the edge.
+
+Part 2: Kruskal’s Algorithm
+
+Added Classes
+Edge 
+is a representation of an edge in the graph. It holds two vertex objects and the weight of the edge between them. The Edge class implements Comparable so that it can be sorted by the quickSort method in homework 8’s ListSort. compareTo(Object b) compares the weight of this and b.
+
+ListSorts 
+is the same file as Homework 8. Used to sort the weights.
+
+Algorithm
+I keep a disjoint set of vertices to track which vertices have been already connected, and keep a dictionary that maps a vertex object to an int that is its index in the disjoint set’s array. (Vertices are arbitrarily numbered in the order they are put in the dictionary.)
+
+getNeighbors() creates a queue of sorted edges. I used a LinkedQueue to store the weight values so that they could be sorted in O(|E|log|E|) time (using quick sort from homework 8). 
+
+Following Kruskal’s algorithm, I take edges off the queue and check if the vertices are already connected; i.e., whether they are in the same set. If they are not, I union the two sets, and add the edge to the graph. Repeat until there are no more edges. 
+
